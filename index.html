@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovelForge</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.5'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'/%3E%3Cpath d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,600;1,400&family=DM+Sans:wght=300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0e0c;
+  --bg2: #1a1916;
+  --bg3: #242220;
+  --bg4: #2e2c29;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f0ede8;
+  --text2: #9a9690;
+  --text3: #5a5752;
+  --accent: #c9a96e;
+  --accent2: #e8c98a;
+  --accent-bg: rgba(201,169,110,0.12);
+  --accent-border: rgba(201,169,110,0.3);
+  --red: #c06060;
+  --red-bg: rgba(192,96,96,0.12);
+  --green: #6a9e6a;
+  --green-bg: rgba(106,158,106,0.12);
+  --blue: #6a8eae;
+  --blue-bg: rgba(106,142,174,0.12);
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;transition:box-shadow 0.2s ease;}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+input,textarea,select,button{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text)}
+input[type=text],input[type=search]{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius);padding:8px 12px;color:var(--text);outline:none;width:100%}
+input[type=text]:focus,input[type=search]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,169,110,0.1)}
+textarea{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 12px;color:var(--text);outline:none;width:100%;resize:vertical;min-height:80px;line-height:1.7}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,169,110,0.1)}
+select{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius);padding:8px 12px;color:var(--text);outline:none;cursor:pointer}
+select:focus{border-color:var(--accent)}
+button{cursor:pointer;border:none;background:none;color:var(--text);transition:all 0.15s}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.sidebar{background:var(--bg2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{overflow-y:auto;min-height:100vh}
+
+/* Sidebar */
+.sidebar-header{padding:20px 16px 16px;border-bottom:0.5px solid var(--border)}
+.logo{font-family:'Playfair Display',serif;font-size:20px;color:var(--accent);letter-spacing:0.02em;display:flex;align-items:center;gap:8px}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:1px;letter-spacing:0.05em;text-transform:uppercase}
+.sidebar-section{padding:12px 10px 8px}
+.sidebar-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;padding:0 6px;margin-bottom:6px}
+.novel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;border:0.5px solid transparent;transition:all 0.15s;margin-bottom:2px}
+.novel-item:hover{background:var(--bg3)}
+.novel-item.active{background:var(--accent-bg);border-color:var(--accent-border)}
+.novel-item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--accent)}
+.novel-item-title{flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.novel-item-genre{font-size:10px;color:var(--text3)}
+.novel-item-actions{display:none;gap:2px}
+.novel-item:hover .novel-item-actions{display:flex}
+.add-novel-btn{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:var(--radius);color:var(--text3);font-size:13px;width:100%;border:0.5px dashed var(--border2);background:none;transition:all 0.15s;margin-top:4px}
+.add-novel-btn:hover{color:var(--accent);border-color:var(--accent-border);background:var(--accent-bg)}
+.import-novel-label{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 10px;border-radius:var(--radius);color:var(--text3);font-size:12px;width:100%;border:0.5px solid transparent;background:var(--bg3);transition:all 0.15s;margin-top:6px;cursor:pointer}
+.import-novel-label:hover{color:var(--text);background:var(--bg4)}
+.drag-hint {font-size: 11px; color: var(--text3); text-align: center; margin-top: 8px; font-style: italic;}
+.sidebar-nav{padding:8px 10px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text2);font-size:13px;border:0.5px solid transparent;transition:all 0.15s;margin-bottom:2px;background:none;width:100%;text-align:left}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.7}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+.nav-item.active svg{opacity:1}
+
+/* Main header */
+.main-header{padding:24px 32px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.novel-title-edit{font-family:'Playfair Display',serif;font-size:26px;color:var(--text);background:transparent;border:none;outline:none;width:100%;line-height:1.2}
+.novel-title-edit:focus{border-bottom:1.5px solid var(--accent)}
+.novel-title-edit::placeholder{color:var(--text3)}
+.header-meta{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border2);color:var(--text2);background:var(--bg3);cursor:pointer;transition:all 0.15s}
+.pill:hover{border-color:var(--accent-border);color:var(--accent)}
+.pill.accent{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.header-actions{display:flex;gap:8px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;transition:all 0.15s;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2)}
+.btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border2)}
+.btn-accent{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.btn-accent:hover{background:rgba(201,169,110,0.2);color:var(--accent2)}
+.btn-danger{background:var(--red-bg);border-color:rgba(192,96,96,0.3);color:var(--red)}
+.btn-danger:hover{background:rgba(192,96,96,0.2)}
+.btn svg{width:14px;height:14px}
+
+/* Content */
+.content{padding:28px 32px;max-width:900px}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.stat-value{font-family:'Playfair Display',serif;font-size:28px;color:var(--accent)}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* Cards */
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title svg{width:14px;height:14px;color:var(--accent);flex-shrink:0}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Chapters */
+.chapter-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:6px;transition:all 0.15s}
+.chapter-item:hover{border-color:var(--border2);background:var(--bg3)}
+.chapter-num-badge{font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-bg);border:0.5px solid var(--accent-border);padding:2px 8px;border-radius:20px;flex-shrink:0;min-width:44px;text-align:center}
+.chapter-title-field{background:transparent;border:none;outline:none;color:var(--text);font-size:14px;flex:1;min-width:0}
+.chapter-title-field:focus{border-bottom:1px solid var(--accent-border)}
+.chapter-title-field::placeholder{color:var(--text3)}
+.status-badge{font-size:11px;padding:2px 9px;border-radius:20px;border:0.5px solid;flex-shrink:0;cursor:pointer}
+.status-done{background:var(--green-bg);border-color:rgba(106,158,106,0.3);color:var(--green)}
+.status-drafting{background:var(--blue-bg);border-color:rgba(106,142,174,0.3);color:var(--blue)}
+.status-planned{background:var(--bg4);border-color:var(--border2);color:var(--text3)}
+.chapter-actions{display:flex;gap:4px;margin-left:4px}
+.icon-btn{background:transparent;border:none;padding:4px;border-radius:6px;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.icon-btn:hover{color:var(--text);background:var(--bg4)}
+.icon-btn.del:hover{color:var(--red);background:var(--red-bg)}
+.icon-btn svg{width:14px;height:14px}
+.dashed-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:var(--radius);border:0.5px dashed var(--border2);color:var(--text3);background:transparent;width:100%;font-size:13px;transition:all 0.15s;margin-top:6px}
+.dashed-btn:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-bg)}
+
+/* Write tab */
+.write-layout{display:grid;grid-template-columns:220px 1fr;gap:0;min-height:calc(100vh - 130px)}
+.write-sidebar{border-right:0.5px solid var(--border);padding:16px 12px;overflow-y:auto}
+.write-ch-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;border:0.5px solid transparent;width:100%;background:none;color:var(--text2);font-size:13px;text-align:left;transition:all 0.15s;margin-bottom:3px}
+.write-ch-btn:hover{background:var(--bg3);color:var(--text)}
+.write-ch-btn.active{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.write-ch-num{font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 6px;border-radius:10px;flex-shrink:0}
+.write-ch-btn.active .write-ch-num{color:var(--accent);background:rgba(201,169,110,0.2)}
+.editor-area{padding:24px 32px;display:flex;flex-direction:column;gap:0}
+.editor-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.editor-ch-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);background:transparent;border:none;outline:none;flex:1;min-width:0}
+.editor-ch-title:focus{border-bottom:1.5px solid var(--accent-border)}
+.editor-ch-title::placeholder{color:var(--text3)}
+.editor-meta{display:flex;align-items:center;gap:8px}
+.wc-badge{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg3);border:0.5px solid var(--border);color:var(--text3)}
+#draft-area{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;font-family:'Playfair Display',serif;font-size:16px;line-height:1.9;color:var(--text);min-height:500px;resize:none;width:100%;transition:border-color 0.15s}
+#draft-area:focus{outline:none;border-color:var(--accent-border)}
+#draft-area::placeholder{color:var(--text3);font-style:italic}
+.no-ch-selected{display:flex;flex-direction:column;align-items:center;justify-content:center;height:400px;color:var(--text3);gap:8px;text-align:center}
+.no-ch-selected svg{width:40px;height:40px;opacity:0.3}
+
+/* Characters */
+.char-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px}
+.char-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:0.5px solid var(--border)}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;border:0.5px solid}
+.avatar-gold{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.avatar-blue{background:var(--blue-bg);border-color:rgba(106,142,174,0.3);color:var(--blue)}
+.avatar-red{background:var(--red-bg);border-color:rgba(192,96,96,0.3);color:var(--red)}
+.avatar-green{background:var(--green-bg);border-color:rgba(106,158,106,0.3);color:var(--green)}
+.char-name-input{background:transparent;border:none;outline:none;font-size:15px;font-weight:500;color:var(--text);flex:1;min-width:0}
+.char-name-input:focus{border-bottom:1px solid var(--accent-border)}
+.char-name-input::placeholder{color:var(--text3)}
+
+/* Custom Plot Styles */
+.act-card-header {display:flex;align-items:center;justify-content:between;gap:12px;margin-bottom:16px}
+.act-title-input {font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--text);background:transparent;border:none;outline:none;flex:1}
+.act-title-input:focus {border-bottom:1px solid var(--accent-border)}
+.act-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex:1}
+.act-num{font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-bg);border:0.5px solid var(--accent-border);padding:2px 10px;border-radius:20px}
+.act-title{font-size:15px;font-weight:500}
+.clue-item{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.clue-item:last-child{border-bottom:none}
+.clue-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--accent)}
+
+/* World */
+.location-item{display:grid;grid-template-columns:180px 1fr 28px;gap:12px;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.location-item:last-child{border-bottom:none}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-lg);padding:24px;width:480px;max-width:90vw}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:20px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* Genre modal selects */
+.genre-option{padding:8px 12px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.15s;margin-bottom:6px;background:var(--bg3)}
+.genre-option:hover,.genre-option.selected{border-color:var(--accent-border);color:var(--accent);background:var(--accent-bg)}
+
+/* Export modal */
+.export-option{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.15s;margin-bottom:8px;background:var(--bg3)}
+.export-option:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-bg)}
+.export-icon{width:32px;height:32px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.export-icon svg{width:16px;height:16px;color:var(--accent)}
+
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:12px;color:var(--text3);text-align:center}
+.empty-state svg{width:48px;height:48px;opacity:0.25}
+.empty-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--text2)}
+
+.status-cycle{cursor:pointer;user-select:none}
+/* Focus Mode Styling Rules */
+body.focus-mode .layout {
+  grid-template-columns: 0px 1fr !important;
+}
+body.focus-mode .sidebar {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        NovelForge
+      </div>
+      <div class="logo-sub">Your writing workspace</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Novels</div>
+      <div id="novel-list"></div>
+      <button class="add-novel-btn" onclick="openNewNovelModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New novel
+      </button>
+      
+      <label for="import-backup-file" class="import-novel-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+        Import Backup
+      </label>
+      <input type="file" id="import-backup-file" accept=".json" style="display: none;" onchange="importAppData(event)">
+      <div class="drag-hint">(Or drop .json anywhere to load)</div>
+    </div>
+
+    <div style="border-top:0.5px solid var(--border);margin:8px 0"></div>
+
+    <div class="sidebar-nav" id="sidebar-nav" style="display:none">
+      <button class="nav-item active" data-tab="overview" onclick="switchTab('overview',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="nav-item" data-tab="write" onclick="switchTab('write',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Write
+      </button>
+      <button class="nav-item" data-tab="characters" onclick="switchTab('characters',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Characters
+      </button>
+      <button class="nav-item" data-tab="plot" onclick="switchTab('plot',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Plot
+      </button>
+      <button class="nav-item" data-tab="world" onclick="switchTab('world',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="empty-state" class="empty-state" style="padding:32px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div class="empty-title">No novel selected</div>
+      <p style="font-size:13px;max-width:280px">Create your first novel using the button in the sidebar to get started.</p>
+      <button class="btn btn-accent" onclick="openNewNovelModal()" style="margin-top:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New novel
+      </button>
+    </div>
+
+    <div id="workspace" style="display:none">
+      <div class="main-header">
+        <div style="flex:1;min-width:0">
+          <input class="novel-title-edit" id="novel-title-edit" type="text" placeholder="Untitled novel..." oninput="updateNovelTitle()" />
+          <div class="header-meta">
+            <span class="pill accent" id="genre-pill" onclick="openGenreModal()">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              <span id="genre-label">Thriller</span>
+            </span>
+            <span class="pill" id="status-pill" onclick="cycleStatus()">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="status-label">In progress</span>
+            </span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn" onclick="openExportModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export / Save
+          </button>
+          <button class="btn btn-danger" onclick="deleteNovel()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div id="tab-overview" class="tab-content content">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Chapters</div><div class="stat-value" id="s-chapters">0</div></div>
+          <div class="stat-card"><div class="stat-label">Done</div><div class="stat-value" id="s-done">0</div></div>
+          <div class="stat-card"><div class="stat-label">Characters</div><div class="stat-value" id="s-chars">0</div></div>
+          <div class="stat-card"><div class="stat-label">Words written</div><div class="stat-value" id="s-words">0</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Story premise
+          </div>
+          <div class="field"><label>One-line summary</label><input type="text" id="f-summary" placeholder="e.g. A protagonist uncovers an unexpected reality..." oninput="saveField('summary',this.value)" /></div>
+          <div class="row2">
+            <div class="field"><label>Themes</label><input type="text" id="f-themes" placeholder="e.g. betrayal, identity..." oninput="saveField('themes',this.value)" /></div>
+            <div class="field"><label>Tone</label><input type="text" id="f-tone" placeholder="e.g. dark, tense..." oninput="saveField('tone',this.value)" /></div>
+          </div>
+          <div class="field"><label>Synopsis</label><textarea id="f-synopsis" placeholder="A longer description of your story..." oninput="saveField('synopsis',this.value)"></textarea></div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Planning & Schedule
+          </div>
+          <div class="row2">
+            <div class="field"><label>Target Wordcount Goal</label><input type="text" id="f-wordgoal" placeholder="e.g. 50,000" oninput="saveField('wordgoal',this.value)" /></div>
+            <div class="field"><label>Deadline / Milestone</label><input type="text" id="f-deadline" placeholder="e.g. December 2026" oninput="saveField('deadline',this.value)" /></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            General Notes & Lore
+          </div>
+          <div class="field"><textarea id="f-notes" style="min-height:120px" placeholder="Brainstorming, rules of the universe, general items to recall..." oninput="saveField('notes',this.value)"></textarea></div>
+        </div>
+      </div>
+
+<div id="tab-write" class="tab-content write-layout">
+        
+        <div class="write-sidebar" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 140px); padding-bottom: 10px;">
+          
+          <div style="flex-grow: 1; overflow-y: auto;">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;padding:0 10px;margin-bottom:8px">Select Chapter</div>
+            <div id="write-sidebar-list"></div>
+          </div>
+          
+          <div style="padding: 10px 4px 0 4px; border-top: 0.5px solid var(--border);">
+            <button class="dashed-btn" onclick="addNewChapterFromWriteTab()" style="margin: 0; width: 100%; justify-content: center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              + New Chapter
+            </button>
+          </div>
+
+        </div>
+
+        <div class="editor-area">
+          <div id="editor-workspace-active" style="display:none;flex-direction:column;flex:1">
+           <div class="editor-toolbar">
+  <input type="text" class="editor-ch-title" id="editor-chapter-title" placeholder="Untitled Chapter" oninput="updateActiveChapterTitle(this.value)">
+              <<div class="editor-meta">
+  <span class="status-badge" id="editor-chapter-status" onclick="cycleActiveChapterStatus()">Planned</span>
+  <span class="wc-badge" id="editor-word-count">0 words</span>
+  
+  <button class="icon-btn del" onclick="deleteActiveChapterDirectly()" title="Delete active chapter" style="padding: 4px 6px; margin-left: 4px;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+      <path d="M10 11v6"></path>
+      <path d="M14 11v6"></path>
+    </svg>
+  </button>
+</div>
+            </div>
+            <textarea id="draft-area" placeholder="Start writing your masterpiece here..." oninput="updateActiveChapterContent(this.value)"></textarea>
+          </div>
+          <div id="editor-workspace-empty" class="no-ch-selected">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <div>No chapter selected</div>
+            <p style="font-size:12px;max-width:200px">Pick an existing chapter from the column list, or create one in the Chapters directory tab.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-chapters" class="tab-content content">
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Manuscript Blueprint Layout
+          </div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Build the sequence mapping of your book. Toggle manuscript status items directly by clicking badges.</p>
+          <div id="chapters-list-container"></div>
+          <button class="dashed-btn" onclick="addNewChapter()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Insert brand new chapter row
+          </button>
+        </div>
+      </div>
+
+      <div id="tab-characters" class="tab-content content">
+        <div style="display:flex;justify-content:between;align-items:center;margin-bottom:16px;gap:12px">
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text2)">Characters</div>
+          <button class="btn btn-accent" onclick="addNewCharacter()" style="margin-left:auto">Add new character</button>
+        </div>
+        <div id="characters-container"></div>
+      </div>
+
+      <div id="tab-plot" class="tab-content content">
+        <div style="display:flex;justify-content:between;align-items:center;margin-bottom:16px;gap:12px">
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text2)">Structural Blueprint Acts</div>
+          <button class="btn btn-accent" onclick="addNewAct()" style="margin-left:auto">Add custom act block</button>
+        </div>
+        <div id="acts-container"></div>
+      </div>
+
+      <div id="tab-world" class="tab-content content">
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Worldbuilding Lore Setting References
+          </div>
+          <div class="field"><label>Setting Summary Style Overview</label><textarea id="f-lore" style="min-height:100px" placeholder="Describe the timeline world aesthetic, history rules, climate, tone..." oninput="saveField('lore',this.value)"></textarea></div>
+          
+          <div style="border-top:0.5px solid var(--border);margin:18px 0 14px"></div>
+          
+          <div style="display:flex;justify-content:between;align-items:center;margin-bottom:12px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Specific Key Locations Directory Index</div>
+            <button class="btn" style="padding:4px 10px;font-size:12px;margin-left:auto" onclick="addNewLocation()">+ Add Location</button>
+          </div>
+          <div id="locations-container"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="new-novel-modal">
+  <div class="modal">
+    <div class="modal-title">Forge a new novel project</div>
+    <div class="field">
+      <label>Novel Title</label>
+      <input type="text" id="new-novel-title" placeholder="Enter book title...">
+    </div>
+    <div class="field" style="margin-top:12px">
+      <label>Primary Core Genre</label>
+      <div id="genre-options-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('new-novel-modal')">Cancel</button>
+      <button class="btn btn-accent" onclick="submitNewNovel()">Create project blueprint</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="genre-modal">
+  <div class="modal">
+    <div class="modal-title">Reassign story blueprint genre</div>
+    <div id="genre-modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('genre-modal')">Close configuration panel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="export-modal">
+  <div class="modal">
+    <div class="modal-title">Export system gateway panel</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Choose your preferred structural format framework system:</p>
+    
+    <div class="export-option" onclick="exportDraftText()">
+      <div class="export-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <div>
+        <div style="font-weight:500;color:var(--text)">Standard Manuscript Compiled Text (.txt)</div>
+        <div style="font-size:11px;color:var(--text3)">Compiles all generated chapters cleanly into a plain text file.</div>
+      </div>
+    </div>
+
+    <div class="export-option" onclick="exportAppStateJSON()">
+      <div class="export-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <div>
+        <div style="font-weight:500;color:var(--text)">Total Workspace Complete Engine JSON Backup (.json)</div>
+        <div style="font-size:11px;color:var(--text3)">Preserves all details, characters, plots, and layout states perfectly.</div>
+      </div>
+    </div>
+
+    <div class="modal-actions"><button class="btn" onclick="closeModal('export-modal')">Close gateway</button></div>
+  </div>
+</div>
+
+<script>
+// Core Application State Setup
+let state = {
+  novels: [],
+  activeNovelId: null,
+  activeChapterId: null,
+  selectedGenre: 'Thriller'
+};
+
+const GENRES = ['Thriller', 'Fantasy', 'Sci-Fi', 'Mystery', 'Romance', 'Historical', 'Horror', 'Contemporary Nonfiction', 'Adventure/Action', 'Dystopian'];
+
+function saveData() {
+  localStorage.setItem('novelforge_data', JSON.stringify(state));
+}
+
+function loadData() {
+  const data = localStorage.getItem('novelforge_data');
+  if (data) {
+    try {
+      state = JSON.parse(data);
+    } catch(e) {
+      console.error("Corrupted local storage parsed engine tree configuration reset executed.", e);
+    }
+  }
+}
+
+// Global Tab Manager Engine Router
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+  document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+  
+  const targetTab = document.getElementById(`tab-${tabId}`);
+  if(targetTab) {
+    if(tabId === 'write') {
+      targetTab.style.display = 'grid';
+    } else {
+      targetTab.style.display = 'block';
+    }
+  }
+  if (el) el.classList.add('active');
+  
+  if(tabId === 'write') {
+    renderWriteSidebar();
+    loadActiveChapterIntoEditor();
+  } else if(tabId === 'chapters') {
+    renderChaptersLayoutList();
+  } else if(tabId === 'characters') {
+    renderCharactersCardsList();
+  } else if(tabId === 'plot') {
+    renderActsLayoutGrid();
+  } else if(tabId === 'world') {
+    renderLocationsDataGrid();
+  }
+}
+
+// Workspace Visibility Switch Core Toggle UI
+function toggleWorkspace(show) {
+  document.getElementById('empty-state').style.display = show ? 'none' : 'flex';
+  document.getElementById('workspace').style.display = show ? 'block' : 'none';
+  document.getElementById('sidebar-nav').style.display = show ? 'block' : 'none';
+}
+
+function renderNovelsList() {
+  const container = document.getElementById('novel-list');
+  container.innerHTML = '';
+  
+  state.novels.forEach(novel => {
+    const item = document.createElement('div');
+    item.className = `novel-item ${novel.id === state.activeNovelId ? 'active' : ''}`;
+    item.onclick = () => selectNovel(novel.id);
+    
+    item.innerHTML = `
+      <div class="novel-item-dot"></div>
+      <div class="novel-item-title">${escapeHTML(novel.title || 'Untitled novel')}</div>
+      <div class="novel-item-genre">${novel.genre}</div>
+      <div class="novel-item-actions">
+        <button class="icon-btn del" onclick="event.stopPropagation(); triggerDeleteNovelFromRow('${novel.id}')" title="Delete novel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function selectNovel(id) {
+  state.activeNovelId = id;
+  const novel = state.novels.find(x => x.id === id);
+  if (!novel) {
+    toggleWorkspace(false);
+    return;
+  }
+  
+  toggleWorkspace(true);
+  saveData();
+  renderNovelsList();
+  
+  // Fill text boxes
+  document.getElementById('novel-title-edit').value = novel.title || '';
+  document.getElementById('genre-label').innerText = novel.genre || 'Thriller';
+  document.getElementById('status-label').innerText = novel.status || 'In progress';
+  
+  document.getElementById('f-summary').value = novel.summary || '';
+  document.getElementById('f-themes').value = novel.themes || '';
+  document.getElementById('f-tone').value = novel.tone || '';
+  document.getElementById('f-synopsis').value = novel.synopsis || '';
+  document.getElementById('f-wordgoal').value = novel.wordgoal || '';
+  document.getElementById('f-deadline').value = novel.deadline || '';
+  document.getElementById('f-lore').value = novel.lore || '';
+  
+  // Setup standard tabs view switch fallbacks routing parameters
+  const activeNav = document.querySelector('.nav-item.active');
+  const activeTabId = activeNav ? activeNav.getAttribute('data-tab') : 'overview';
+  switchTab(activeTabId, activeNav);
+  
+  recalculateOverviewMetricsStats();
+}
+
+function updateNovelTitle() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.title = document.getElementById('novel-title-edit').value;
+  saveData();
+  renderNovelsList();
+}
+
+function saveField(fieldKey, value) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n[fieldKey] = value;
+  saveData();
+}
+
+function cycleStatus() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const states = ['In progress', 'Completed Blueprint', 'Drafting Phase', 'Editing Workflow', 'On Hold'];
+  let idx = states.indexOf(n.status || 'In progress');
+  idx = (idx + 1) % states.length;
+  n.status = states[idx];
+  document.getElementById('status-label').innerText = n.status;
+  saveData();
+}
+
+// Modals Handling Subsystem Infrastructure
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openNewNovelModal() {
+  document.getElementById('new-novel-title').value = '';
+  state.selectedGenre = 'Thriller';
+  
+  const grid = document.getElementById('genre-options-grid');
+  grid.innerHTML = '';
+  GENRES.forEach(g => {
+    const opt = document.createElement('div');
+    opt.className = `genre-option ${g === 'Thriller' ? 'selected' : ''}`;
+    opt.innerText = g;
+    opt.onclick = () => {
+      document.querySelectorAll('#genre-options-grid .genre-option').forEach(x=>x.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.selectedGenre = g;
+    };
+    grid.appendChild(opt);
+  });
+  openModal('new-novel-modal');
+}
+
+function submitNewNovel() {
+  const title = document.getElementById('new-novel-title').value.trim() || 'Untitled novel';
+  const newNovel = {
+    id: 'n_' + Date.now() + Math.random().toString(36).substr(2, 4),
+    title: title,
+    genre: state.selectedGenre,
+    status: 'In progress',
+    summary: '', themes: '', tone: '', synopsis: '', wordgoal: '', deadline: '', lore: '',
+    chapters: [],
+    characters: [],
+    locations: [],
+    acts: [] // Completely blank narrative framework setup matching request instructions
+  };
+  
+  state.novels.push(newNovel);
+  state.activeNovelId = newNovel.id;
+  
+  saveData();
+  renderNovelsList();
+  selectNovel(newNovel.id);
+  closeModal('new-novel-modal');
+}
+
+function openGenreModal() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  
+  const grid = document.getElementById('genre-modal-grid');
+  grid.innerHTML = '';
+  GENRES.forEach(g => {
+    const opt = document.createElement('div');
+    opt.className = `genre-option ${g === n.genre ? 'selected' : ''}`;
+    opt.innerText = g;
+    opt.onclick = () => {
+      n.genre = g;
+      document.getElementById('genre-label').innerText = g;
+      saveData();
+      renderNovelsList();
+      closeModal('genre-modal');
+    };
+    grid.appendChild(opt);
+  });
+  openModal('genre-modal');
+}
+
+function openExportModal() { openModal('export-modal'); }
+
+function triggerDeleteNovelFromRow(id) {
+  if(confirm("Are you absolutely sure you want to completely erase this entire novel entity blueprint ecosystem? All text draft will be purged.")) {
+    state.novels = state.novels.filter(x => x.id !== id);
+    if(state.activeNovelId === id) {
+      state.activeNovelId = state.novels.length > 0 ? state.novels[0].id : null;
+    }
+    saveData();
+    renderNovelsList();
+    if(state.activeNovelId) selectNovel(state.activeNovelId);
+    else toggleWorkspace(false);
+  }
+}
+
+function deleteNovel() {
+  if(!state.activeNovelId) return;
+  triggerDeleteNovelFromRow(state.activeNovelId);
+}
+
+// Metrics Engine Math Computations Component
+function recalculateOverviewMetricsStats() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  
+  let doneCount = 0;
+  let totalWords = 0;
+  
+  n.chapters.forEach(ch => {
+    if(ch.status === 'Done') doneCount++;
+    if(ch.content) {
+      const clean = ch.content.trim().replace(/\s+/g, ' ');
+      if(clean !== '') totalWords += clean.split(' ').length;
+    }
+  });
+
+  document.getElementById('s-chapters').innerText = n.chapters.length;
+  document.getElementById('s-done').innerText = doneCount;
+  document.getElementById('s-chars').innerText = n.characters.length;
+  document.getElementById('s-words').innerText = totalWords.toLocaleString();
+}
+
+// Export Engine Component Standard TXT Download Pipeline
+function exportDraftText() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+
+  let output = `# ${n.title || 'Untitled novel'}\n`;
+  output += `Genre: ${n.genre}\n`;
+  output += `Premise: ${n.summary || 'N/A'}\n\n`;
+  output += `=========================================\n\n`;
+
+  if(n.chapters.length === 0) {
+    output += `[Draft is currently empty. No chapters generated.]`;
+  } else {
+    n.chapters.forEach((ch, i) => {
+      output += `## Chapter ${i + 1}: ${ch.title}\n`;
+      output += `Status: ${ch.status}\n\n`;
+      output += `${ch.content || ''}\n\n`;
+      output += `***\n\n`;
+    });
+  }
+
+  const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  
+  let sanitizedTitle = (n.title || 'Untitled_novel').trim().replace(/[^a-z0-9_\-\s]/gi, '').replace(/\s+/g, '_');
+  a.download = `${sanitizedTitle}_manuscript.txt`;
+  
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  closeModal('export-modal');
+}
+
+// Export configuration state as named JSON backup 
+function exportAppStateJSON() {
+  const currentNovel = state.novels.find(x => x.id === state.activeNovelId);
+  let baseName = "novelforge_backup";
+  
+  if (currentNovel && currentNovel.title && currentNovel.title.trim() !== "") {
+    baseName = currentNovel.title.trim().replace(/[^a-z0-9_\-\s]/gi, '').replace(/\s+/g, '_');
+  } else if (currentNovel) {
+    baseName = "Untitled_novel";
+  }
+
+  const jsonString = JSON.stringify(state, null, 2);
+  const blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${baseName}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  closeModal('export-modal');
+}
+
+// Unified backup storage data logic component parser framework
+function handleStateJSONText(text) {
+  try {
+    const importedState = JSON.parse(text);
+    if (importedState && Array.isArray(importedState.novels)) {
+      state = importedState;
+      saveData(); 
+      renderNovelsList();
+      if (state.novels.length > 0) {
+        selectNovel(state.activeNovelId || state.novels[0].id);
+      } else {
+        toggleWorkspace(false);
+      }
+      alert("Workspace backup loaded successfully!");
+    } else {
+      alert("Error: Invalid backup file structure.");
+    }
+  } catch(error) {
+    alert("Failed to parse file. Make sure it's a valid .json file generated by NovelForge.");
+    console.error(error);
+  }
+}
+
+// Standard fallback manual upload file input component change engine
+function importAppData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    handleStateJSONText(e.target.result);
+  };
+  reader.readAsText(file);
+  event.target.value = ''; 
+}
+
+// Chapters Tab Blueprint Component Area Render Layout Architecture
+function renderChaptersLayoutList() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  
+  const container = document.getElementById('chapters-list-container');
+  container.innerHTML = '';
+  
+  if(n.chapters.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3)">No chapters exist in this structural node array.</div>`;
+    return;
+  }
+  
+  n.chapters.forEach((ch, index) => {
+    const item = document.createElement('div');
+    item.className = 'chapter-item';
+    
+    let badgeClass = 'status-planned';
+    if(ch.status === 'Done') badgeClass = 'status-done';
+    if(ch.status === 'Drafting') badgeClass = 'status-drafting';
+    
+    item.innerHTML = `
+      <div class="chapter-num-badge">Ch ${index + 1}</div>
+      <input type="text" class="chapter-title-field" value="${escapeHTML(ch.title || '')}" placeholder="Enter chapter title node reference..." onchange="updateChapterTitleFromList('${ch.id}', this.value)" />
+      <span class="status-badge ${badgeClass}" onclick="cycleChapterStatusDirectly('${ch.id}')">${ch.status || 'Planned'}</span>
+      <div class="chapter-actions">
+        <button class="icon-btn" onclick="navigateToChapterEditorDirectly('${ch.id}')" title="Open inside writer node element workspace">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </button>
+        <button class="icon-btn del" onclick="deleteChapterRowNode('${ch.id}')" title="Delete chapter segment entry link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function addNewChapter() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const newId = 'ch_' + Date.now() + Math.random().toString(36).substr(2,2);
+  n.chapters.push({
+    id: newId,
+    title: ``,
+    content: '',
+    status: 'Planned'
+  });
+  saveData();
+  renderChaptersLayoutList();
+  recalculateOverviewMetricsStats();
+}
+
+function updateChapterTitleFromList(chId, val) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const ch = n.chapters.find(x => x.id === chId);
+  if(ch) ch.title = val;
+  saveData();
+}
+
+// Composition View Editor Sub-System Engine Framework Components
+function renderWriteSidebar() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  
+  const container = document.getElementById('write-sidebar-list');
+  container.innerHTML = '';
+  
+  if(n.chapters.length === 0) {
+    container.innerHTML = `<div style="text-align:center;font-size:12px;color:var(--text3);padding:10px 0">No manuscript nodes exist.</div>`;
+    return;
+  }
+  
+  n.chapters.forEach((ch, i) => {
+    const btn = document.createElement('button');
+    btn.className = `write-ch-btn ${ch.id === state.activeChapterId ? 'active' : ''}`;
+    btn.onclick = () => selectChapterToEditNode(ch.id);
+    
+    btn.innerHTML = `
+      <span class="write-ch-num">${i + 1}</span>
+      <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(ch.title || 'Untitled Chapter')}</span>
+    `;
+    container.appendChild(btn);
+  });
+}
+
+function selectChapterToEditNode(chId) {
+  state.activeChapterId = chId;
+  saveData();
+  renderWriteSidebar();
+  loadActiveChapterIntoEditor();
+}
+
+function loadActiveChapterIntoEditor() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  
+  const wsActive = document.getElementById('editor-workspace-active');
+  const wsEmpty = document.getElementById('editor-workspace-empty');
+  
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if(!ch) {
+    wsActive.style.display = 'none';
+    wsEmpty.style.display = 'flex';
+    return;
+  }
+  
+  wsActive.style.display = 'flex';
+  wsEmpty.style.display = 'none';
+  
+  document.getElementById('editor-chapter-title').value = ch.title || '';
+  document.getElementById('draft-area').value = ch.content || '';
+  
+  const statusBadge = document.getElementById('editor-chapter-status');
+  statusBadge.innerText = ch.status || 'Planned';
+  statusBadge.className = 'status-badge';
+  if(ch.status === 'Done') statusBadge.classList.add('status-done');
+  else if(ch.status === 'Drafting') statusBadge.classList.add('status-drafting');
+  else statusBadge.classList.add('status-planned');
+  
+  calculateLiveWordcountEditorString(ch.content || '');
+}
+
+function updateActiveChapterTitle(val) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if(!ch) return;
+  ch.title = val;
+  saveData();
+  renderWriteSidebar();
+}
+
+function updateActiveChapterContent(val) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if(!ch) return;
+  ch.content = val;
+  saveData();
+  calculateLiveWordcountEditorString(val);
+}
+
+function calculateLiveWordcountEditorString(text) {
+  let count = 0;
+  const clean = text.trim().replace(/\s+/g, ' ');
+  if(clean !== '') count = clean.split(' ').length;
+  document.getElementById('editor-word-count').innerText = `${count.toLocaleString()} words`;
+}
+
+function cycleActiveChapterStatus() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if(!ch) return;
+  
+  const modes = ['Planned', 'Drafting', 'Done'];
+  let idx = modes.indexOf(ch.status || 'Planned');
+  ch.status = modes[(idx + 1) % modes.length];
+  
+  saveData();
+  loadActiveChapterIntoEditor();
+  recalculateOverviewMetricsStats();
+}
+
+// Cast Entities Profile Components Rendering Engine Array Pipeline
+function renderCharactersCardsList() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const container = document.getElementById('characters-container');
+  container.innerHTML = '';
+  
+  if(n.characters.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);border:0.5px dashed var(--border2);border-radius:var(--radius-lg)">No character sheets exist yet in this manuscript index pool.</div>`;
+    return;
+  }
+  
+  const avatarThemes = ['avatar-gold', 'avatar-blue', 'avatar-red', 'avatar-green'];
+  
+  n.characters.forEach((char, idx) => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    
+    const theme = avatarThemes[idx % avatarThemes.length];
+    const initial = char.name ? char.name.trim().charAt(0).toUpperCase() : '?';
+    
+    card.innerHTML = `
+      <div class="char-header">
+        <div class="avatar ${theme}">${initial}</div>
+        <input type="text" class="char-name-input" value="${escapeHTML(char.name || '')}" placeholder="Character identity name reference..." onchange="updateCharProperty('${char.id}','name',this.value); renderCharactersCardsList();" />
+        <button class="icon-btn del" onclick="deleteCharSheetNode('${char.id}')" title="Remove element profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+      <div class="row3">
+        <div class="field"><label>Archetype / Role Layout</label><input type="text" value="${escapeHTML(char.role || '')}" placeholder="e.g. Protagonist, Mentor" onchange="updateCharProperty('${char.id}','role',this.value)" /></div>
+        <div class="field"><label>Primary Motivation Driver</label><input type="text" value="${escapeHTML(char.motivation || '')}" placeholder="e.g. Revenge, Survival" onchange="updateCharProperty('${char.id}','motivation',this.value)" /></div>
+        <div class="field"><label>Conflict Boundary Node</label><input type="text" value="${escapeHTML(char.conflict || '')}" placeholder="e.g. Internal doubt, Rivalry" onchange="updateCharProperty('${char.id}','conflict',this.value)" /></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Secret Attributes / Hidden Backstory Nodes</label><textarea placeholder="Plot hooks, private files data secrets unknown to the rest of the setting environment ecosystem..." onchange="updateCharProperty('${char.id}','bio',this.value)">${escapeHTML(char.bio || '')}</textarea></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function addNewCharacter() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.characters.push({
+    id: 'char_' + Date.now() + Math.random().toString(36).substr(2,2),
+    name: '', role: '', motivation: '', conflict: '', bio: ''
+  });
+  saveData();
+  renderCharactersCardsList();
+  recalculateOverviewMetricsStats();
+}
+
+// Narrative Plot Act Node Grid Rendering Layout Module Pipeline Engine
+function renderActsLayoutGrid() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const container = document.getElementById('acts-container');
+  container.innerHTML = '';
+  
+  if(n.acts.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text3)">No multi-act structures mapped. Add act to begin sequencing structural parameters.</div>`;
+    return;
+  }
+  
+  n.acts.forEach((act, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.padding = '16px 20px';
+    
+    card.innerHTML = `
+      <div class="act-card-header">
+        <div class="act-header">
+          <span class="act-num">Block ${idx + 1}</span>
+          <input type="text" class="act-title-input" value="${escapeHTML(act.label || '')}" placeholder="Act milestone grouping definition label reference..." onchange="updateActPropertyNode('${act.id}','label',this.value)" />
+        </div>
+        <button class="icon-btn del" onclick="deleteActNodeBlock('${act.id}')" title="Erase act alignment blueprint structure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+      <div class="field"><label>Core Climax Event Node / Narrative Shift Turning Metric Objective</label><textarea style="min-height:60px" placeholder="Describe the progression turning benchmarks required to fulfill this part of the book structure framework rules..." onchange="updateActPropertyNode('${act.id}','description',this.value)">${escapeHTML(act.description || '')}</textarea></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function addNewAct() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.acts.push({
+    id: 'act_' + Date.now() + Math.random().toString(36).substr(2,2),
+    label: ``,
+    description: ''
+  });
+  saveData();
+  renderActsLayoutGrid();
+}
+
+function updateActPropertyNode(actId, propKey, val) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const act = n.acts.find(x => x.id === actId);
+  if(act) act[propKey] = val;
+  saveData();
+}
+
+// NEW: Delete specific narrative act phases completely from active novel state array tree
+function deleteActNodeBlock(actId) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.acts = n.acts.filter(x => x.id !== actId);
+  saveData();
+  renderActsLayoutGrid();
+}
+
+// Worldbuilding Locations Data Entry Columns Grid Layout Row Index Engine
+function renderLocationsDataGrid() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  const container = document.getElementById('locations-container');
+  container.innerHTML = '';
+  
+  if(n.locations.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">No setting directory map markers defined yet.</div>`;
+    return;
+  }
+  
+  n.locations.forEach(loc => {
+    const div = document.createElement('div');
+    div.className = 'location-item';
+    
+    div.innerHTML = `
+      <input type="text" style="font-weight:500" value="${escapeHTML(loc.name || '')}" placeholder="Setting location label node..." onchange="updateLocationProperties('${loc.id}','name',this.value)" />
+      <input type="text" value="${escapeHTML(loc.details || '')}" placeholder="Atmospheric characteristics notes timeline mapping markers descriptive links details data..." onchange="updateLocationProperties('${loc.id}','details',this.value)" />
+      <button class="icon-btn del" onclick="deleteLocationRowLinkNode('${loc.id}')" title="Delete listing row element">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addNewLocation() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.locations.push({
+    id: 'loc_' + Date.now() + Math.random().toString(36).substr(2,2),
+    name: '', details: ''
+  });
+  saveData();
+  renderLocationsDataGrid();
+}
+
+// Anti-injection String Security Escape Processing Tool Node Utility
+function escapeHTML(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// Domestic Document Content Load Application Router Runtime Gateway Core
+window.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  renderNovelsList();
+  if (state.novels.length > 0) {
+    selectNovel(state.activeNovelId || state.novels[0].id);
+  } else {
+    toggleWorkspace(false);
+  }
+
+  // Target Area Drag and Drop Integration Handlers
+  window.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.style.boxShadow = "inset 0 0 0 4px var(--accent)";
+  });
+
+  window.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.style.boxShadow = "none";
+  });
+
+  window.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.style.boxShadow = "none";
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      
+      if (!file.name.endsWith('.json')) {
+        alert("Please drop a valid .json NovelForge workspace backup file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        handleStateJSONText(evt.target.result);
+      };
+      reader.readAsText(file);
+    }
+  });
+});
+// Fix Chapter Deletion
+function deleteChapterRowNode(chId) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  if(confirm("Are you sure you want to delete this chapter? All written content inside it will be lost.")) {
+    n.chapters = n.chapters.filter(x => x.id !== chId);
+    // If we just deleted the chapter we were currently viewing, deselect it
+    if(state.activeChapterId === chId) {
+      state.activeChapterId = n.chapters.length > 0 ? n.chapters[0].id : null;
+    }
+    saveData();
+    
+    // Refresh whatever view is currently open
+    renderWriteSidebar();
+    loadActiveChapterIntoEditor();
+    if(document.getElementById('tab-chapters')) renderChaptersLayoutList();
+    recalculateOverviewMetricsStats();
+  }
+}
+
+// Fix Character Deletion
+function deleteCharSheetNode(charId) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  if(confirm("Delete this character profile?")) {
+    n.characters = n.characters.filter(x => x.id !== charId);
+    saveData();
+    renderCharactersCardsList();
+    recalculateOverviewMetricsStats();
+  }
+}
+
+// Fix Location Deletion
+function deleteLocationRowLinkNode(locId) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if(!n) return;
+  n.locations = n.locations.filter(x => x.id !== locId);
+  saveData();
+  renderLocationsDataGrid();
+}
+// 1. Makes the "+ New Chapter" button create a chapter and instantly select it
+function addNewChapterFromWriteTab() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  
+  // Generates a unique ID for the new chapter
+  const newId = 'ch_' + Date.now() + Math.random().toString(36).substr(2,2);
+  
+  // Adds the new chapter to your novel's database array
+  n.chapters.push({
+    id: newId,
+    title: `Chapter ${n.chapters.length + 1}`,
+    content: '',
+    status: 'Planned'
+  });
+  
+  state.activeChapterId = newId; // Target focus immediately to your new chapter
+  saveData();                    // Save changes to local storage
+  renderWriteSidebar();          // Redraw the list on the left to show the new chapter
+  loadActiveChapterIntoEditor(); // Load the fresh blank page into the editor
+  recalculateOverviewMetricsStats();
+}
+
+// 2. Erases the currently active chapter when you click the trash button
+function deleteActiveChapterDirectly() {
+  if (!state.activeChapterId) return;
+  
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  
+  if (confirm("Are you sure you want to delete this chapter? All written content inside it will be lost.")) {
+    // Filter out the active chapter from the data array
+    n.chapters = n.chapters.filter(x => x.id !== state.activeChapterId);
+    
+    // Auto shift focus to the first available chapter, otherwise reset to nothing
+    state.activeChapterId = n.chapters.length > 0 ? n.chapters[0].id : null;
+    
+    saveData();
+    renderWriteSidebar();
+    loadActiveChapterIntoEditor();
+    recalculateOverviewMetricsStats();
+  }
+}
+</script>
+</body>
+</html>
