@@ -1,181 +1,364 @@
 # NovelKit
 
-A beautiful, feature-rich writing workspace for crafting novels and long-form narratives. NovelKit provides writers with an intuitive interface to manage story structure, characters, worldbuilding, and manuscripts all in one place.
+A beautiful, feature-rich writing workspace for crafting novels and long-form narratives. NovelKit provides writers with an intuitive interface to manage story structure, characters, worldbuilding, and manuscript progress—all in one distraction-free environment.
 
 ## ✨ Features
 
 ### 📚 Novel Management
-- Create and manage multiple novels in your workspace
-- Store novel metadata including title, genre, and status
-- Track novel progress with real-time statistics
-- Import/export backups of your entire workspace as JSON
+- Create and manage multiple novels simultaneously in your workspace
+- Store and edit novel metadata including title, genre, and completion status
+- Track writing progress with real-time statistics dashboard
+- Import/export complete workspace backups as JSON for data persistence
+- Drag-and-drop JSON file import for easy recovery
+- Switch between novels instantly with single-click navigation
 
 ### ✍️ Writing & Chapters
-- Dedicated writing mode with a distraction-free editor
+- **Dedicated Writing Mode**: Full-screen distraction-free editor optimized for focus
 - Organize your manuscript into chapters with titles and descriptions
-- Track chapter status: Planned, Drafting, or Done
-- Live word count tracking for each chapter and overall manuscript
-- Quick chapter navigation from the sidebar
+- Track chapter status across three states: Planned → Drafting → Done
+- **Live word count tracking** for individual chapters and full manuscript
+- Quick chapter navigation sidebar for instant chapter selection
+- Chapter status cycling with visual status badges
+- Automatic content saving to browser local storage
 
 ### 🎭 Characters
-- Create and manage character profiles for your story
-- Add detailed character information and descriptions
-- Color-coded character avatars for visual organization
+- Comprehensive character profile system for story development
+- Create detailed character profiles with descriptions and notes
+- Color-coded character avatars (Gold, Blue, Red, Green) for visual organization
+- Manage character relationships and story roles
+- Character count statistics in overview dashboard
 
 ### 📖 Plot & Structure
-- Build your story's narrative framework using acts
-- Organize plot points and story clues
-- Plan your story's progression with custom act blocks
+- **Narrative framework builder** using custom acts and story structure
+- Organize plot points and story clues within structured acts
+- Build story progression with numbered act blocks
 - Track important story beats and plot devices
+- Flexible act management (add, edit, delete custom acts)
+- Clue and plot point tracking within each act
 
 ### 🌍 Worldbuilding
-- Comprehensive world and setting documentation
-- Store lore, history, rules, and aesthetic details of your world
-- Create location database with specific place descriptions
-- Reference your world details while writing
+- **Comprehensive world documentation system** for immersive storytelling
+- Lore and setting documentation with unlimited detail capacity
+- Store world history, rules, aesthetics, and unique details
+- **Location database** for specific place descriptions and references
+- Create and organize world locations with descriptions
+- Reference your world details seamlessly while writing
 
 ### 📋 Story Planning
-- One-line summary of your novel's premise
-- Themes and tone documentation
-- Full synopsis for complete story overview
-- Target word count and deadline tracking
-- General notes and brainstorming space
+- **Story Premise Card** with multiple planning fields:
+  - One-line summary of your novel's core concept
+  - Themes and tone documentation
+  - Full synopsis for complete story overview
+  - General notes and brainstorming space
+- **Planning & Schedule tracking**:
+  - Target word count goal setting
+  - Deadline and milestone tracking
+  - Visual progress monitoring
 
 ### 📊 Overview Dashboard
-- Real-time statistics showing:
+- **Real-time statistics** showing:
   - Total chapters count
-  - Completed chapters
+  - Completed chapters counter
   - Character count
-  - Total words written
+  - Total words written (across all chapters)
+- Statistics update automatically as you write and edit
+- Quick access to all story premise information
 
 ### 💾 Data Management
-- Auto-save to browser's local storage
-- Export manuscript as plain text (.txt)
-- Export entire workspace as JSON backup (.json)
-- Import backups to restore your work
-- Drag-and-drop JSON import support
+- **Auto-save to browser local storage** - never lose work between sessions
+- Export manuscript as **plain text (.txt)** for sharing, printing, or distribution
+- Export entire workspace as **JSON backup (.json)** for complete data preservation
+- Import backups anytime to restore your work
+- Drag-and-drop JSON import support for convenience
+- File sanitization for safe export naming
 
-### 🎨 UI Features
-- Beautiful dark theme with warm gold accents
-- Responsive sidebar navigation
-- Modal dialogs for novel creation and settings
-- Genre selection (Thriller, Fantasy, Sci-Fi, Mystery, Romance, Historical, Horror, Nonfiction, Adventure/Action, Dystopian)
-- Focus mode to hide sidebar and minimize distractions
-- Smooth transitions and polished interactions
+### 🎨 UI & UX Features
+- **Beautiful dark theme** with warm gold accents for extended writing sessions
+- Responsive sidebar navigation for easy feature access
+- Modal dialogs for intuitive novel creation and settings
+- **10 genre options**: Thriller, Fantasy, Sci-Fi, Mystery, Romance, Historical, Horror, Nonfiction, Adventure/Action, Dystopian
+- **Focus mode** to hide sidebar and minimize distractions (maximizes writing space)
+- Smooth transitions and polished interactions throughout
+- Responsive design that works across devices
+- Keyboard-friendly navigation and shortcuts
+- Accessibility-focused UI components
+
+### 🔄 Novel Status Workflow
+- **In progress**: Currently working on the manuscript
+- **Completed Blueprint**: Story structure and planning complete
+- **Drafting Phase**: Initial manuscript draft in progress
+- **Editing Workflow**: Revision and editing phase
+- **On Hold**: Project temporarily paused
+- Click to cycle through statuses instantly
 
 ## 🚀 Getting Started
 
-1. **Open the Application**: Simply open `index.html` in your web browser
-2. **Create Your First Novel**: Click the "New novel" button in the sidebar
-3. **Choose a Genre**: Select your story's primary genre
-4. **Start Writing**: Navigate to the Write tab to begin drafting chapters
-5. **Organize Your Story**: Use the other tabs to develop characters, plot, and world
+### Installation
+1. **Clone or download** the repository
+2. **Open the Application**: Simply open `index.html` in your web browser (no installation needed!)
+3. Begin writing immediately - no setup required
+
+### First Novel Workflow
+1. Click the **"New novel"** button in the sidebar
+2. Enter your novel title
+3. Select your story's **primary genre** from 10 options
+4. Start building your story:
+   - **Overview**: Add premise, themes, synopsis, and planning info
+   - **Write**: Draft your chapters in distraction-free mode
+   - **Chapters**: View and organize chapter structure
+   - **Characters**: Create character profiles
+   - **Plot**: Build narrative structure with acts
+   - **World**: Document your setting and locations
 
 ## 📂 File Structure
 
-- `index.html` - Complete standalone application with embedded HTML, CSS, and JavaScript
-- `README.md` - Documentation (this file)
+```
+NovelKit/
+├── index.html          # Complete standalone application
+│                       # (HTML + CSS + JavaScript bundled)
+└── README.md          # Documentation (this file)
+```
+
+**Single File Architecture**: NovelKit is a self-contained single HTML file with embedded CSS and JavaScript—no build process, dependencies, or configuration needed.
 
 ## 💡 Usage Tips
 
 ### Sidebar Navigation
-- **Novels**: List of all your projects; click to switch between them
-- **Overview**: Dashboard with statistics and story premise details
-- **Write**: Full-screen writing editor with chapter sidebar
-- **Chapters**: View and manage all chapters in your manuscript
-- **Characters**: Create and organize character profiles
-- **Plot**: Develop your story structure with acts and plot points
-- **World**: Build and reference your story's setting and lore
+| Tab | Purpose |
+|-----|---------|
+| **Novels** | List of all projects; click to switch between them |
+| **Overview** | Dashboard with statistics and story premise details |
+| **Write** | Full-screen writing editor with chapter navigation |
+| **Chapters** | View, organize, and manage all manuscript chapters |
+| **Characters** | Create and maintain character profiles and details |
+| **Plot** | Develop narrative structure using acts and plot points |
+| **World** | Build and reference setting, lore, and locations |
 
-### Chapters Tab
-- Add new chapters with the "Insert brand new chapter row" button
+### Chapters Tab Workflow
+- Click **"Insert brand new chapter row"** to add chapters to your outline
 - Click chapter titles to rename them
-- Click status badges (Planned/Drafting/Done) to cycle status
-- Use action buttons to edit or delete chapters
+- Click status badges (Planned/Drafting/Done) to cycle chapter status
+- Use action buttons to edit in writer mode or delete chapters
+- Drag to reorder chapters (if supported)
 
-### Write Tab
-- Select a chapter from the left sidebar to start writing
-- Chapter title is at the top with word count tracking
-- Status badge allows quick status updates while writing
-- All content is saved automatically to local storage
+### Write Tab Essentials
+- Select a chapter from the **left sidebar** to open it for writing
+- Edit **chapter title** at the top with live preview
+- **Word count badge** updates in real-time as you type
+- Click **status badge** to quickly change chapter status while writing
+- All content **auto-saves** to local storage as you work
+- Press **Escape** (if implemented) to return to chapter list
 
-### Export Options
-- **Manuscript (.txt)**: Plain text compilation of all chapters for sharing or printing
-- **Backup (.json)**: Complete project backup with all data; import anytime to restore
+### Export & Backup Options
+| Export Type | Format | Use Case |
+|-------------|--------|----------|
+| **Manuscript** | Plain Text (.txt) | Sharing, printing, distribution, or reading offline |
+| **Backup** | JSON (.json) | Complete data preservation for recovery or migration |
 
 ### Focus Mode
-- Enable focus mode in the browser to hide UI elements and minimize distractions
-- The sidebar will hide, giving you maximum screen space for writing
+- Enable **focus mode** to hide the sidebar and UI chrome
+- Maximizes screen space for uninterrupted writing
+- Perfect for NaNoWiMo sessions or sprint writing
+- Disable to return to full feature access
 
-## 💾 Data Storage
+## 💾 Data Storage & Privacy
 
-NovelKit stores all your data in your browser's **local storage**. Your novels are never sent to any server. 
+**Local Storage Architecture**: NovelKit stores all your data in your browser's local storage. 
 
-**Important**: Clear your browser's local storage or cache may delete your work. Use the export feature regularly to create backups.
+### Key Points
+- ✅ **Your data never leaves your device** - no server uploads
+- ✅ **Completely offline-capable** - works without internet
+- ✅ **Instant saving** - automatic persistence
+- ⚠️ **Clearing browser data deletes work** - use export regularly to backup
+
+### Best Practices
+- **Export regularly** to create JSON backups of your work
+- Keep backups in **cloud storage** (Google Drive, Dropbox, etc.) for safety
+- Test your import workflow before you need to rely on it
+- Consider exporting after significant writing sessions
 
 ## 🎨 Customization
 
-The application uses CSS custom properties for easy theme customization. Edit the `:root` variables in the `<style>` section to change colors:
+The application uses **CSS custom properties** for easy theme customization. Edit the `:root` variables in the `<style>` section to change colors:
 
 ```css
---bg: #0f0e0c;          /* Background color */
---text: #f0ede8;        /* Primary text color */
---accent: #c9a96e;      /* Accent gold color */
---red: #c06060;         /* Delete/danger color */
---green: #6a9e6a;       /* Done/complete color */
---blue: #6a8eae;        /* Drafting color */
+:root {
+  /* Background Colors */
+  --bg: #0f0e0c;              /* Primary background */
+  --bg2: #1a1916;             /* Secondary background */
+  --bg3: #242220;             /* Tertiary background */
+  --bg4: #2e2c29;             /* Quaternary background */
+
+  /* Text Colors */
+  --text: #f0ede8;            /* Primary text */
+  --text2: #9a9690;           /* Secondary text */
+  --text3: #5a5752;           /* Tertiary text (labels) */
+
+  /* Accent Colors */
+  --accent: #c9a96e;          /* Primary accent (gold) */
+  --accent2: #e8c98a;         /* Secondary accent (lighter gold) */
+
+  /* Status Colors */
+  --red: #c06060;             /* Delete/danger */
+  --green: #6a9e6a;           /* Done/complete */
+  --blue: #6a8eae;            /* Drafting state */
+
+  /* Borders & Spacing */
+  --radius: 10px;             /* Standard border radius */
+  --radius-lg: 14px;          /* Large border radius */
+}
 ```
+
+### Color Schemes
+- **Dark Mode** (default): Optimized for extended writing sessions, reduces eye strain
+- **Custom Themes**: Modify CSS variables to create light mode or custom color schemes
+- **Accessibility**: High contrast ratios for readability
 
 ## 📱 Browser Compatibility
 
-Works best in modern browsers with ES6 support:
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-- Any Chromium-based browser
+Works best in modern browsers with ES6+ support:
+- ✅ Chrome/Edge (recommended) - version 60+
+- ✅ Firefox - version 55+
+- ✅ Safari - version 10.1+
+- ✅ Any Chromium-based browser
+- ⚠️ IE11 not supported (uses modern JavaScript)
 
-## 🎯 Keyboard & Navigation
+### Browser Storage Requirements
+- Ensure **local storage is enabled** (usually enabled by default)
+- Private/incognito mode: Works but data deleted when you close the window
+- Recommended: Use normal mode for persistent data storage
 
-- **Tab Navigation**: Use the sidebar nav items to switch between views
-- **Click Status Badges**: Cycle through chapter/novel statuses
-- **Modal Dialogs**: Use keyboard-friendly buttons to submit or cancel
+## ⌨️ Keyboard & Navigation
 
-## 📝 Features Detail
+- **Tab Navigation**: Use sidebar nav items to switch between views
+- **Status Cycling**: Click status badges to cycle through states
+- **Modal Navigation**: Use keyboard-friendly buttons to submit or cancel
+- **Text Selection**: Standard copy/paste/select operations supported
+- **Auto-save**: All changes saved instantly while typing
 
-### Novel Status States
-- **In progress**: Currently working on the manuscript
-- **Completed Blueprint**: Story structure is complete
-- **Drafting Phase**: Initial draft in progress
-- **Editing Workflow**: Revising and editing
-- **On Hold**: Project paused
+## 📝 Advanced Features Detail
+
+### Novel Status States (Complete Workflow)
+```
+In progress ──→ Completed Blueprint ──→ Drafting Phase ──→ Editing Workflow ──→ On Hold
+```
 
 ### Chapter Status States
-- **Planned**: Chapter outline exists but not written
-- **Drafting**: Chapter is being written
-- **Done**: Chapter is complete
+```
+Planned ──→ Drafting ──→ Done
+```
 
-## 🔒 Privacy
+### Word Count Calculation
+- Counts actual words (whitespace-separated tokens)
+- Ignores excess whitespace normalization
+- Updates in real-time as you type
+- Displays in human-readable format (e.g., "42,000 words")
 
-All data is stored locally on your device. NovelKit does not:
-- Send data to external servers
-- Track your writing
-- Require an account or login
-- Collect personal information
+### Data Persistence Logic
+- Saves to local storage after every keystroke (debounced for performance)
+- Full state snapshot on every save
+- Recoverable from any save point via JSON export
+- No automatic cloud sync (intentional for privacy)
+
+## 🔒 Privacy & Security
+
+**NovelKit respects your privacy completely**:
+
+- ✅ **No data collection**: Zero tracking or analytics
+- ✅ **No external requests**: All processing happens locally
+- ✅ **No account required**: Anonymous, login-free operation
+- ✅ **No ads**: Clean, distraction-free interface
+- ✅ **No telemetry**: Your writing stays private
+- ✅ **Open source**: Code is transparent and reviewable
 
 ## 🐛 Troubleshooting
 
-**Lost my work**: If you accidentally cleared browser data, check if you have a JSON backup file. Import it through the "Import Backup" button.
+### Lost Work
+**Issue**: Can't find my work after closing the browser
+- **Solution**: Check if you have a JSON backup file. Import it via "Import Backup" button in the sidebar
+- **Prevention**: Export JSON backups after major milestones
 
-**App not saving**: Ensure your browser allows local storage. Check browser settings and privacy/storage permissions.
+### App Not Saving
+**Issue**: Changes not persisting between sessions
+- **Check**: Browser local storage is enabled in settings
+- **Try**: Open DevTools (F12) → Application → Local Storage → check `novelkit_data` exists
+- **Solution**: Some privacy browsers block storage—try disabling privacy mode
 
-**Can't import backup**: Make sure the JSON file was exported from NovelKit. The file structure must match the app's data format.
+### Can't Import Backup
+**Issue**: Getting error when importing JSON file
+- **Verify**: File was exported from NovelKit (check for `novels` array in JSON)
+- **Check**: File is valid JSON (not corrupted or edited)
+- **Try**: Reimport the original backup file
+
+### Browser Crashing
+**Issue**: App becomes slow or unresponsive with large manuscripts
+- **Cause**: Very large novel with many chapters in local storage
+- **Solution**: Export your work and start a new project
+- **Tip**: Consider splitting very large novels into separate projects
+
+### Missing Data in Imported Backup
+**Issue**: Imported backup but some data is missing
+- **Cause**: Backup file is from old version or partially corrupted
+- **Check**: All expected fields present in JSON structure
+- **Solution**: Contact support or manually reconstruct lost data
+
+## 📖 Tips for Writers
+
+### Organization Best Practices
+- **One novel per project**: Create separate projects for different manuscripts
+- **Descriptive chapter titles**: Use meaningful names for easy navigation
+- **Regular exports**: Backup your work weekly to cloud storage
+- **Character tagging**: Use character names or codes in plot notes for easy searching
+
+### Writing Workflow
+1. **Planning Phase**: Develop premise, characters, and plot in Overview tab
+2. **Outlining**: Create chapter structure in Chapters tab
+3. **First Draft**: Write chapters in Write tab, update status as you progress
+4. **Revision**: Use notes to track edits, update status to "Editing Workflow"
+5. **Final Pass**: Polish and prepare for export
+6. **Export & Share**: Export as .txt for agents, publishers, or readers
+
+### Focus Writing Sessions
+- Enable focus mode for distraction-free writing
+- Set a timer for sprint sessions (25-50 minutes)
+- Turn off notifications and close other tabs
+- Use the word count badge to track daily goals
+
+## 🎯 Roadmap & Future Features
+
+Potential enhancements:
+- Cloud sync (optional)
+- Search and find functionality
+- Chapter reordering via drag-and-drop
+- Scene-level organization
+- Revision tracking and change history
+- Character relationship mapping
+- Timeline visualization
+- Writing statistics and analytics
+- Dark mode/light mode toggle
+- Mobile app version
 
 ## 📄 License
 
-Feel free to use, modify, and distribute as needed.
+NovelKit is free and open for personal use. Feel free to modify, fork, and distribute as needed.
+
+### Usage Rights
+- ✅ Personal writing projects
+- ✅ Educational purposes
+- ✅ Modification and customization
+- ✅ Distribution and sharing
+- ✅ Commercial projects
+
+---
+
+## 🌟 Support & Feedback
+
+Found a bug? Have a feature request? Visit the [Issues](https://github.com/GeorgeTW6060/NovelKit/issues) page.
 
 ---
 
 **Happy Writing!** 📖✨
 
-Start forging your novel masterpiece today with NovelKit.
+Start crafting your masterpiece today with NovelKit. Your imagination is the only limit.
+
+*NovelKit: Where writers meet their stories.*
