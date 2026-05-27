@@ -1,6 +1,6 @@
-# NovelForge
+# NovelKit
 
-A beautiful, feature-rich writing workspace for crafting novels and long-form narratives. NovelForge provides writers with an intuitive interface to manage story structure, characters, worldbuilding, and manuscripts all in one place.
+A beautiful, feature-rich writing workspace for crafting novels and long-form narratives. NovelKit provides writers with an intuitive interface to manage story structure, characters, worldbuilding, and manuscripts all in one place.
 
 ## ✨ Features
 
@@ -109,7 +109,7 @@ A beautiful, feature-rich writing workspace for crafting novels and long-form na
 
 ## 💾 Data Storage
 
-NovelForge stores all your data in your browser's **local storage**. Your novels are never sent to any server. 
+NovelKit stores all your data in your browser's **local storage**. Your novels are never sent to any server. 
 
 **Important**: Clear your browser's local storage or cache may delete your work. Use the export feature regularly to create backups.
 
@@ -156,7 +156,7 @@ Works best in modern browsers with ES6 support:
 
 ## 🔒 Privacy
 
-All data is stored locally on your device. NovelForge does not:
+All data is stored locally on your device. NovelKit does not:
 - Send data to external servers
 - Track your writing
 - Require an account or login
@@ -168,7 +168,7 @@ All data is stored locally on your device. NovelForge does not:
 
 **App not saving**: Ensure your browser allows local storage. Check browser settings and privacy/storage permissions.
 
-**Can't import backup**: Make sure the JSON file was exported from NovelForge. The file structure must match the app's data format.
+**Can't import backup**: Make sure the JSON file was exported from NovelKit. The file structure must match the app's data format.
 
 ## 📄 License
 
@@ -178,4 +178,4 @@ Feel free to use, modify, and distribute as needed.
 
 **Happy Writing!** 📖✨
 
-Start forging your novel masterpiece today with NovelForge.
+Start forging your novel masterpiece today with NovelKit.
