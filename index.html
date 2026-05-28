@@ -1707,7 +1707,14 @@ document.addEventListener('keydown', (e) => {
     toggleFocusMode();
   }
 });
-
+function updateCharProperty(charId, property, value) {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  const ch = n.characters.find(x => x.id === charId);
+  if (!ch) return;
+  ch[property] = value;
+  saveData();
+}
 </script>
 </body>
 </html>
