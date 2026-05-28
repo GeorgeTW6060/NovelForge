@@ -1063,20 +1063,6 @@ function selectChapterToEditNode(chId) {
   renderWriteSidebar();
   loadActiveChapterIntoEditor();
 }
-
-function loadActiveChapterIntoEditor() {
-  const n = state.novels.find(x => x.id === state.activeNovelId);
-  if(!n) return;
-  
-  const wsActive = document.getElementById('editor-workspace-active');
-  const wsEmpty = document.getElementById('editor-workspace-empty');
-  
-  const ch = n.chapters.find(x => x.id === state.activeChapterId);
-  if(!ch) {
-    wsActive.style.display = 'none';
-    wsEmpty.style.display = 'flex';
-    return;
-  }
   
   wsActive.style.display = 'flex';
   wsEmpty.style.display = 'none';
