@@ -203,12 +203,66 @@ button{cursor:pointer;border:none;background:none;color:var(--text);transition:a
 .empty-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--text2)}
 
 .status-cycle{cursor:pointer;user-select:none}
+
+/* Formatting toolbar */
+.fmt-toolbar{display:flex;align-items:center;gap:4px;padding:7px 10px;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;flex-wrap:wrap}
+.fmt-btn{background:transparent;border:0.5px solid transparent;border-radius:6px;padding:4px 7px;color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;min-width:28px;transition:all 0.12s}
+.fmt-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border2)}
+.fmt-btn.active{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+.fmt-sep{width:0.5px;height:18px;background:var(--border2);margin:0 4px;flex-shrink:0}
+
+/* Find & Replace panel */
+.fnr-panel{display:none;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:12px;animation:slideDown 0.15s ease}
+.fnr-panel.open{display:block}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.fnr-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.fnr-row:last-child{margin-bottom:0}
+.fnr-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;width:52px;flex-shrink:0}
+.fnr-input{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius);padding:6px 10px;color:var(--text);outline:none;flex:1;font-size:13px}
+.fnr-input:focus{border-color:var(--accent)}
+.fnr-count{font-size:11px;color:var(--text3);white-space:nowrap;min-width:60px}
+.fnr-nav{display:flex;gap:4px}
+.fnr-nav button{background:var(--bg3);border:0.5px solid var(--border2);border-radius:6px;padding:4px 8px;color:var(--text2);cursor:pointer;font-size:13px}
+.fnr-nav button:hover{background:var(--bg4);color:var(--text)}
+
+/* Rich text editor */
+#draft-editor{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;font-family:'Playfair Display',serif;font-size:16px;line-height:1.9;color:var(--text);min-height:500px;width:100%;overflow-y:auto;outline:none;transition:border-color 0.15s;word-wrap:break-word}
+#draft-editor:focus{border-color:var(--accent-border)}
+#draft-editor:empty:before{content:attr(data-placeholder);color:var(--text3);font-style:italic;pointer-events:none}
+#draft-editor b,#draft-editor strong{font-weight:700}
+#draft-editor i,#draft-editor em{font-style:italic}
+#draft-editor u{text-decoration:underline}
+#draft-editor s{text-decoration:line-through}
+#draft-editor h1{font-size:2em;font-weight:600;margin:0.4em 0}
+#draft-editor h2{font-size:1.5em;font-weight:600;margin:0.4em 0}
+#draft-editor h3{font-size:1.2em;font-weight:600;margin:0.4em 0}
+#draft-editor blockquote{border-left:3px solid var(--accent-border);padding-left:14px;color:var(--text2);font-style:italic;margin:8px 0}
+#draft-editor ul,#draft-editor ol{padding-left:20px;margin:4px 0}
+mark.fnr-highlight{background:rgba(201,169,110,0.35);color:var(--text);border-radius:2px}
+mark.fnr-highlight.current{background:rgba(201,169,110,0.7)}
+
 /* Focus Mode Styling Rules */
 body.focus-mode .layout {
-  grid-template-columns: 0px 1fr !important;
+  grid-template-columns: 0 1fr !important;
 }
 body.focus-mode .sidebar {
-  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, width 0.25s ease;
+}
+.sidebar {
+  transition: opacity 0.2s ease, width 0.25s ease;
+}
+body.focus-mode .main {
+  width: 100% !important;
+}
+body.focus-mode #tab-write {
+  grid-template-columns: 220px 1fr !important;
 }
 </style>
 </head>
@@ -364,10 +418,16 @@ body.focus-mode .sidebar {
           <div id="editor-workspace-active" style="display:none;flex-direction:column;flex:1">
            <div class="editor-toolbar">
   <input type="text" class="editor-ch-title" id="editor-chapter-title" placeholder="Untitled Chapter" oninput="updateActiveChapterTitle(this.value)">
-              <<div class="editor-meta">
+              <div class="editor-meta">
   <span class="status-badge" id="editor-chapter-status" onclick="cycleActiveChapterStatus()">Planned</span>
   <span class="wc-badge" id="editor-word-count">0 words</span>
-  
+  <button class="icon-btn" onclick="toggleFindReplace()" title="Find and Replace (Ctrl+H)" style="padding:4px 7px;margin-left:2px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </button>
+  <button class="icon-btn" id="focus-mode-btn" onclick="toggleFocusMode()" title="Focus mode — hide sidebar (Ctrl+Shift+F)" style="padding:4px 7px;margin-left:2px">
+    <svg id="focus-icon-expand" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    <svg id="focus-icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M4 14h6m0 0v6m0-6-7 7M20 10h-6m0 0V4m0 6 7-7"/></svg>
+  </button>
   <button class="icon-btn del" onclick="deleteActiveChapterDirectly()" title="Delete active chapter" style="padding: 4px 6px; margin-left: 4px;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="3 6 5 6 21 6"></polyline>
@@ -378,7 +438,73 @@ body.focus-mode .sidebar {
   </button>
 </div>
             </div>
-            <textarea id="draft-area" placeholder="Start writing your masterpiece here..." oninput="updateActiveChapterContent(this.value)"></textarea>
+
+            <!-- Find and Replace Panel -->
+            <div class="fnr-panel" id="fnr-panel">
+              <div class="fnr-row">
+                <span class="fnr-label">Find</span>
+                <input class="fnr-input" id="fnr-find" placeholder="Search text..." oninput="fnrSearch()" />
+                <span class="fnr-count" id="fnr-count"></span>
+                <div class="fnr-nav">
+                  <button onclick="fnrPrev()" title="Previous">&#8593;</button>
+                  <button onclick="fnrNext()" title="Next">&#8595;</button>
+                </div>
+                <button class="icon-btn" onclick="toggleFindReplace()" title="Close" style="margin-left:4px">&#10005;</button>
+              </div>
+              <div class="fnr-row">
+                <span class="fnr-label">Replace</span>
+                <input class="fnr-input" id="fnr-replace" placeholder="Replace with..." />
+                <button class="fmt-btn" onclick="fnrReplaceCurrent()" style="white-space:nowrap;padding:4px 10px">Replace</button>
+                <button class="fmt-btn" onclick="fnrReplaceAll()" style="white-space:nowrap;padding:4px 10px">Replace all</button>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);cursor:pointer">
+                  <input type="checkbox" id="fnr-case" onchange="fnrSearch()" style="width:auto" /> Case sensitive
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);cursor:pointer">
+                  <input type="checkbox" id="fnr-whole" onchange="fnrSearch()" style="width:auto" /> Whole word
+                </label>
+              </div>
+            </div>
+
+            <!-- Formatting Toolbar -->
+            <div class="fmt-toolbar" id="fmt-toolbar">
+              <select class="fmt-select" id="fmt-block" onchange="fmtBlock(this.value)" title="Text style">
+                <option value="p">Normal</option>
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+                <option value="blockquote">Quote</option>
+              </select>
+              <div class="fmt-sep"></div>
+              <button class="fmt-btn" id="btn-bold" onclick="fmt('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+              <button class="fmt-btn" id="btn-italic" onclick="fmt('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+              <button class="fmt-btn" id="btn-underline" onclick="fmt('underline')" title="Underline (Ctrl+U)"><u>U</u></button>
+              <button class="fmt-btn" id="btn-strikethrough" onclick="fmt('strikeThrough')" title="Strikethrough"><s>S</s></button>
+              <div class="fmt-sep"></div>
+              <button class="fmt-btn" id="btn-ul" onclick="fmt('insertUnorderedList')" title="Bullet list">&#8226; List</button>
+              <button class="fmt-btn" id="btn-ol" onclick="fmt('insertOrderedList')" title="Numbered list">1. List</button>
+              <div class="fmt-sep"></div>
+              <button class="fmt-btn" onclick="fmt('justifyLeft')" title="Align left">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+              </button>
+              <button class="fmt-btn" onclick="fmt('justifyCenter')" title="Center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+              </button>
+              <button class="fmt-btn" onclick="fmt('justifyRight')" title="Align right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>
+              </button>
+              <div class="fmt-sep"></div>
+              <button class="fmt-btn" onclick="fmt('removeFormat')" title="Clear formatting" style="font-size:11px">Clear</button>
+              <button class="fmt-btn" onclick="fmtHR()" title="Insert divider" style="font-size:11px">&#8213; Rule</button>
+            </div>
+
+            <div id="draft-editor" contenteditable="true"
+              data-placeholder="Start writing your masterpiece here..."
+              oninput="updateActiveChapterContentFromEditor()"
+              onkeydown="editorKeydown(event)"
+              onmouseup="updateFmtToolbarState()"
+              onkeyup="updateFmtToolbarState()"></div>
           </div>
           <div id="editor-workspace-empty" class="no-ch-selected">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -1295,6 +1421,293 @@ function deleteActiveChapterDirectly() {
     recalculateOverviewMetricsStats();
   }
 }
+
+// ============================================================
+// RICH TEXT EDITOR — formatting, save/load, word count
+// ============================================================
+
+function getEditor() { return document.getElementById('draft-editor'); }
+
+function fmt(cmd) {
+  document.execCommand(cmd, false, null);
+  getEditor().focus();
+  updateFmtToolbarState();
+}
+
+function fmtBlock(tag) {
+  document.execCommand('formatBlock', false, tag);
+  getEditor().focus();
+  updateFmtToolbarState();
+}
+
+function fmtHR() {
+  document.execCommand('insertHTML', false, '<hr style="border:none;border-top:0.5px solid var(--border2);margin:16px 0">');
+  getEditor().focus();
+}
+
+function updateFmtToolbarState() {
+  const cmds = {
+    'btn-bold': 'bold',
+    'btn-italic': 'italic',
+    'btn-underline': 'underline',
+    'btn-strikethrough': 'strikeThrough',
+    'btn-ul': 'insertUnorderedList',
+    'btn-ol': 'insertOrderedList'
+  };
+  for (const [id, cmd] of Object.entries(cmds)) {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.toggle('active', document.queryCommandState(cmd));
+  }
+  // Update block selector
+  const blockSel = document.getElementById('fmt-block');
+  if (blockSel) {
+    const val = document.queryCommandValue('formatBlock').toLowerCase();
+    const map = { h1:'h1', h2:'h2', h3:'h3', blockquote:'blockquote' };
+    blockSel.value = map[val] || 'p';
+  }
+}
+
+function editorKeydown(e) {
+  // Ctrl+B/I/U shortcuts
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'b') { e.preventDefault(); fmt('bold'); }
+    if (e.key === 'i') { e.preventDefault(); fmt('italic'); }
+    if (e.key === 'u') { e.preventDefault(); fmt('underline'); }
+    if (e.key === 'h') { e.preventDefault(); toggleFindReplace(); }
+  }
+}
+
+function updateActiveChapterContentFromEditor() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if (!ch) return;
+  const html = getEditor().innerHTML;
+  ch.content = html;
+  saveData();
+  // Word count on plain text
+  const plain = getEditor().innerText || '';
+  const clean = plain.trim().replace(/\s+/g, ' ');
+  const count = clean ? clean.split(' ').length : 0;
+  document.getElementById('editor-word-count').innerText = count.toLocaleString() + ' words';
+  recalculateOverviewMetricsStats();
+}
+
+// Override loadActiveChapterIntoEditor to use rich editor
+const _origLoad = loadActiveChapterIntoEditor;
+function loadActiveChapterIntoEditor() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  const wsActive = document.getElementById('editor-workspace-active');
+  const wsEmpty = document.getElementById('editor-workspace-empty');
+  const ch = n.chapters.find(x => x.id === state.activeChapterId);
+  if (!ch) {
+    wsActive.style.display = 'none';
+    wsEmpty.style.display = 'flex';
+    return;
+  }
+  wsActive.style.display = 'flex';
+  wsEmpty.style.display = 'none';
+  document.getElementById('editor-chapter-title').value = ch.title || '';
+  const editor = getEditor();
+  // Load HTML content; fall back to wrapping plain text
+  if (ch.content && ch.content.trim().startsWith('<')) {
+    editor.innerHTML = ch.content;
+  } else {
+    editor.innerHTML = ch.content ? '<p>' + escapeHTML(ch.content) + '</p>' : '';
+  }
+  const statusBadge = document.getElementById('editor-chapter-status');
+  statusBadge.innerText = ch.status || 'Planned';
+  statusBadge.className = 'status-badge';
+  if (ch.status === 'Done') statusBadge.classList.add('status-done');
+  else if (ch.status === 'Drafting') statusBadge.classList.add('status-drafting');
+  else statusBadge.classList.add('status-planned');
+  const plain = editor.innerText || '';
+  const clean = plain.trim().replace(/\s+/g, ' ');
+  const count = clean ? clean.split(' ').length : 0;
+  document.getElementById('editor-word-count').innerText = count.toLocaleString() + ' words';
+}
+
+// Override calculateLiveWordcountEditorString to work with HTML content
+function calculateLiveWordcountEditorString(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  const plain = (tmp.innerText || '').trim().replace(/\s+/g, ' ');
+  const count = plain ? plain.split(' ').length : 0;
+  document.getElementById('editor-word-count').innerText = count.toLocaleString() + ' words';
+}
+
+// Override updateActiveChapterContent (textarea version) — now a no-op since we use editor
+function updateActiveChapterContent(val) { /* replaced by rich editor */ }
+
+// ============================================================
+// FIND & REPLACE
+// ============================================================
+
+let fnrMatches = [];
+let fnrCurrentIdx = -1;
+let fnrOriginalHTML = '';
+
+function toggleFindReplace() {
+  const panel = document.getElementById('fnr-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('fnr-find').focus();
+    fnrSearch();
+  } else {
+    fnrClearHighlights();
+  }
+}
+
+function fnrSearch() {
+  fnrClearHighlights();
+  fnrMatches = [];
+  fnrCurrentIdx = -1;
+  const term = document.getElementById('fnr-find').value;
+  const caseSensitive = document.getElementById('fnr-case').checked;
+  const wholeWord = document.getElementById('fnr-whole').checked;
+  const countEl = document.getElementById('fnr-count');
+  if (!term) { countEl.textContent = ''; return; }
+
+  const editor = getEditor();
+  fnrOriginalHTML = editor.innerHTML;
+
+  // Walk text nodes and highlight matches
+  const flags = caseSensitive ? 'g' : 'gi';
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = wholeWord ? '\\b' + escaped + '\\b' : escaped;
+  const regex = new RegExp(pattern, flags);
+
+  // Replace in innerHTML using a safe approach
+  const highlighted = editor.innerHTML.replace(/>([^<]*)</g, (match, text) => {
+    const replaced = text.replace(regex, (m) => `<mark class="fnr-highlight">${m}</mark>`);
+    return '>' + replaced + '<';
+  });
+  editor.innerHTML = highlighted;
+
+  fnrMatches = Array.from(editor.querySelectorAll('mark.fnr-highlight'));
+  countEl.textContent = fnrMatches.length ? `${fnrMatches.length} found` : 'Not found';
+  if (fnrMatches.length > 0) { fnrCurrentIdx = 0; fnrHighlightCurrent(); }
+}
+
+function fnrHighlightCurrent() {
+  fnrMatches.forEach((m, i) => m.classList.toggle('current', i === fnrCurrentIdx));
+  if (fnrMatches[fnrCurrentIdx]) {
+    fnrMatches[fnrCurrentIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  const countEl = document.getElementById('fnr-count');
+  if (fnrMatches.length) countEl.textContent = `${fnrCurrentIdx + 1} / ${fnrMatches.length}`;
+}
+
+function fnrNext() {
+  if (!fnrMatches.length) return;
+  fnrCurrentIdx = (fnrCurrentIdx + 1) % fnrMatches.length;
+  fnrHighlightCurrent();
+}
+
+function fnrPrev() {
+  if (!fnrMatches.length) return;
+  fnrCurrentIdx = (fnrCurrentIdx - 1 + fnrMatches.length) % fnrMatches.length;
+  fnrHighlightCurrent();
+}
+
+function fnrClearHighlights() {
+  const editor = getEditor();
+  // Unwrap all mark tags
+  editor.querySelectorAll('mark.fnr-highlight').forEach(mark => {
+    const parent = mark.parentNode;
+    while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+    parent.removeChild(mark);
+  });
+  // Normalize text nodes
+  editor.normalize();
+}
+
+function fnrReplaceCurrent() {
+  if (fnrCurrentIdx < 0 || !fnrMatches[fnrCurrentIdx]) return;
+  const replacement = document.getElementById('fnr-replace').value;
+  const mark = fnrMatches[fnrCurrentIdx];
+  const text = document.createTextNode(replacement);
+  mark.parentNode.replaceChild(text, mark);
+  fnrMatches.splice(fnrCurrentIdx, 1);
+  if (fnrCurrentIdx >= fnrMatches.length) fnrCurrentIdx = fnrMatches.length - 1;
+  const countEl = document.getElementById('fnr-count');
+  countEl.textContent = fnrMatches.length ? `${fnrCurrentIdx + 1} / ${fnrMatches.length}` : 'Not found';
+  if (fnrMatches.length) fnrHighlightCurrent();
+  updateActiveChapterContentFromEditor();
+}
+
+function fnrReplaceAll() {
+  const term = document.getElementById('fnr-find').value;
+  const replacement = document.getElementById('fnr-replace').value;
+  const caseSensitive = document.getElementById('fnr-case').checked;
+  const wholeWord = document.getElementById('fnr-whole').checked;
+  if (!term) return;
+  fnrClearHighlights();
+  const flags = caseSensitive ? 'g' : 'gi';
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = wholeWord ? '\\b' + escaped + '\\b' : escaped;
+  const regex = new RegExp(pattern, flags);
+  const editor = getEditor();
+  // Replace only in text nodes, not in HTML tags
+  editor.innerHTML = editor.innerHTML.replace(/>([^<]*)</g, (match, text) => {
+    return '>' + text.replace(regex, replacement) + '<';
+  });
+  fnrMatches = [];
+  fnrCurrentIdx = -1;
+  document.getElementById('fnr-count').textContent = 'Done';
+  updateActiveChapterContentFromEditor();
+}
+
+// Also export rich text as plain text for .txt export
+const _origExportTxt = exportDraftText;
+function exportDraftText() {
+  const n = state.novels.find(x => x.id === state.activeNovelId);
+  if (!n) return;
+  let output = `# ${n.title || 'Untitled novel'}\nGenre: ${n.genre}\nPremise: ${n.summary || 'N/A'}\n\n=========================================\n\n`;
+  if (n.chapters.length === 0) {
+    output += '[Draft is currently empty. No chapters generated.]';
+  } else {
+    n.chapters.forEach((ch, i) => {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = ch.content || '';
+      output += `## Chapter ${i + 1}: ${ch.title}\nStatus: ${ch.status}\n\n${tmp.innerText || ''}\n\n***\n\n`;
+    });
+  }
+  const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const sanitizedTitle = (n.title || 'Untitled_novel').trim().replace(/[^a-z0-9_\-\s]/gi, '').replace(/\s+/g, '_');
+  a.download = `${sanitizedTitle}_manuscript.txt`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  closeModal('export-modal');
+}
+
+
+// ============================================================
+// FOCUS MODE — hide sidebar while writing
+// ============================================================
+function toggleFocusMode() {
+  const isFocus = document.body.classList.toggle('focus-mode');
+  document.getElementById('focus-icon-expand').style.display = isFocus ? 'none' : 'block';
+  document.getElementById('focus-icon-collapse').style.display = isFocus ? 'block' : 'none';
+  const btn = document.getElementById('focus-mode-btn');
+  btn.classList.toggle('active', isFocus);
+  btn.title = isFocus ? 'Exit focus mode (Ctrl+Shift+F)' : 'Focus mode — hide sidebar (Ctrl+Shift+F)';
+  // Force main to recalculate its width
+  const main = document.querySelector('.main');
+  if (main) { main.style.minWidth = isFocus ? '0' : ''; }
+}
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'F') {
+    e.preventDefault();
+    toggleFocusMode();
+  }
+});
+
 </script>
 </body>
 </html>
