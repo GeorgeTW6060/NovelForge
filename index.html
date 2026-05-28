@@ -1160,17 +1160,17 @@ function renderCharactersCardsList() {
     card.innerHTML = `
       <div class="char-header">
         <div class="avatar ${theme}">${silhouette}</div>
-        <input type="text" class="char-name-input" value="${escapeHTML(char.name || '')}" placeholder="Character identity name reference..." onchange="updateCharProperty('${char.id}','name',this.value); renderCharactersCardsList();" />
+        <input type="text" class="char-name-input" value="${escapeHTML(char.name || '')}" placeholder="Character identity name reference..." oninput="updateCharProperty('${char.id}','name',this.value); renderCharactersCardsList();" />
         <button class="icon-btn del" onclick="deleteCharSheetNode('${char.id}')" title="Remove element profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
         </button>
       </div>
       <div class="row3">
-        <div class="field"><label>Role</label><input type="text" value="${escapeHTML(char.role || '')}" placeholder="e.g. Protagonist, Mentor" onchange="updateCharProperty('${char.id}','role',this.value)" /></div>
-        <div class="field"><label>Motivation</label><input type="text" value="${escapeHTML(char.motivation || '')}" placeholder="e.g. Revenge, Survival" onchange="updateCharProperty('${char.id}','motivation',this.value)" /></div>
-        <div class="field"><label>Conflict</label><input type="text" value="${escapeHTML(char.conflict || '')}" placeholder="e.g. Internal doubt, Rivalry" onchange="updateCharProperty('${char.id}','conflict',this.value)" /></div>
+        <div class="field"><label>Role</label><input type="text" value="${escapeHTML(char.role || '')}" placeholder="e.g. Protagonist, Mentor" oninput="updateCharProperty('${char.id}','role',this.value)" /></div>
+        <div class="field"><label>Motivation</label><input type="text" value="${escapeHTML(char.motivation || '')}" placeholder="e.g. Revenge, Survival" oninput="updateCharProperty('${char.id}','motivation',this.value)" /></div>
+        <div class="field"><label>Conflict</label><input type="text" value="${escapeHTML(char.conflict || '')}" placeholder="e.g. Internal doubt, Rivalry" oninput="updateCharProperty('${char.id}','conflict',this.value)" /></div>
       </div>
-      <div class="field" style="margin-top:12px"><label>Character Description</label><textarea placeholder="Plot hooks, private files data secrets unknown to the rest of the setting environment ecosystem..." onchange="updateCharProperty('${char.id}','bio',this.value)">${escapeHTML(char.bio || '')}</textarea></div>
+      <div class="field" style="margin-top:12px"><label>Character Description</label><textarea placeholder="Plot hooks, private files data secrets unknown to the rest of the setting environment ecosystem..." oninput="updateCharProperty('${char.id}','bio',this.value)">${escapeHTML(char.bio || '')}</textarea></div>
     `;
     container.appendChild(card);
   });
