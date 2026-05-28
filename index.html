@@ -1170,7 +1170,7 @@ function renderCharactersCardsList() {
         <div class="field"><label>Primary Motivation Driver</label><input type="text" value="${escapeHTML(char.motivation || '')}" placeholder="e.g. Revenge, Survival" onchange="updateCharProperty('${char.id}','motivation',this.value)" /></div>
         <div class="field"><label>Conflict Boundary Node</label><input type="text" value="${escapeHTML(char.conflict || '')}" placeholder="e.g. Internal doubt, Rivalry" onchange="updateCharProperty('${char.id}','conflict',this.value)" /></div>
       </div>
-      <div class="field" style="margin-top:12px"><label>Secret Attributes / Hidden Backstory Nodes</label><textarea placeholder="Plot hooks, private files data secrets unknown to the rest of the setting environment ecosystem..." onchange="updateCharProperty('${char.id}','bio',this.value)">${escapeHTML(char.bio || '')}</textarea></div>
+      <div class="field" style="margin-top:12px"><label>Character Description</label><textarea placeholder="Plot hooks, private files data secrets unknown to the rest of the setting environment ecosystem..." onchange="updateCharProperty('${char.id}','bio',this.value)">${escapeHTML(char.bio || '')}</textarea></div>
     `;
     container.appendChild(card);
   });
