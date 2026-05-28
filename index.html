@@ -324,7 +324,7 @@ body.focus-mode #tab-write {
     <div id="empty-state" class="empty-state" style="padding:32px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <div class="empty-title">No novel selected</div>
-      <p style="font-size:13px;max-width:280px">Create your first novel using the button in the sidebar to get started.</p>
+      <p style="font-size:13px;max-width:280px">Create your first novel to get started.</p>
       <button class="btn btn-accent" onclick="openNewNovelModal()" style="margin-top:8px">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New novel
@@ -500,7 +500,7 @@ body.focus-mode #tab-write {
             </div>
 
             <div id="draft-editor" contenteditable="true"
-              data-placeholder="Start writing your masterpiece here..."
+              data-placeholder="Start writing here..."
               oninput="updateActiveChapterContentFromEditor()"
               onkeydown="editorKeydown(event)"
               onmouseup="updateFmtToolbarState()"
